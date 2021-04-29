@@ -1,3 +1,4 @@
+from lox.runtime_error import LoxRuntimeError
 import sys
 from typing import Union
 
@@ -6,10 +7,14 @@ from lox.scanner import Scanner
 from lox.parser import Parser
 from lox.token import Token
 from lox.token_type import TokenType
+from lox.interpreter import Interpreter
 
 LOX_VERSION = "0.1.0"
 
 s_had_error = False
+s_had_runtime_error = False
+
+interpreter = Interpreter()
 
 
 def report(line: int, where: str, message: str) -> None:
@@ -28,6 +33,10 @@ def error(location: Union[int, Token], message: str) -> None:
             report(location.line, f" at '{location.lexeme}'", message)
 
 
+def runtime_error(err: LoxRuntimeError):
+    print(f"{err}\n[line {err.token.line}]", file=sys.stderr)
+
+
 def run(source: str) -> None:
     scanner = Scanner(source)
     tokens = scanner.scan_tokens()
@@ -37,7 +46,7 @@ def run(source: str) -> None:
     if s_had_error:
         return
 
-    print(AstPrinter().visit(expr))
+    interpreter.interpret(expr)
 
 
 def run_file(file_name: str) -> None:
@@ -46,6 +55,8 @@ def run_file(file_name: str) -> None:
     run(contents)
     if s_had_error:
         exit(65)
+    if s_had_runtime_error:
+        exit(70)
 
 
 def run_prompt() -> None:

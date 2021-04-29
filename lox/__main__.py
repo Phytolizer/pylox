@@ -1,3 +1,4 @@
+from lox.interpreter import Interpreter
 import sys
 from lox import run_file, run_prompt
 
