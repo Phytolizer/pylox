@@ -1,12 +1,15 @@
 import sys
-from typing import Tuple
+from typing import Union
 
-from lox.token import Token
+from lox.ast.printer import AstPrinter
 from lox.scanner import Scanner
+from lox.parser import Parser
+from lox.token import Token
+from lox.token_type import TokenType
 
-LOX_VERSION: str = "0.1.0"
+LOX_VERSION = "0.1.0"
 
-s_had_error: bool = False
+s_had_error = False
 
 
 def report(line: int, where: str, message: str) -> None:
@@ -15,16 +18,26 @@ def report(line: int, where: str, message: str) -> None:
     s_had_error = True
 
 
-def error(line: int, message: str) -> None:
-    report(line, "", message)
+def error(location: Union[int, Token], message: str) -> None:
+    if isinstance(location, int):
+        report(location, "", message)
+    elif isinstance(location, Token):
+        if location.type == TokenType.EOF:
+            report(location.line, " at end", message)
+        else:
+            report(location.line, f" at '{location.lexeme}'", message)
 
 
 def run(source: str) -> None:
     scanner = Scanner(source)
-    tokens: Tuple[Token] = scanner.scan_tokens()
+    tokens = scanner.scan_tokens()
+    parser = Parser(tokens)
+    expr = parser.parse()
 
-    for token in tokens:
-        print(token)
+    if s_had_error:
+        return
+
+    print(AstPrinter().visit(expr))
 
 
 def run_file(file_name: str) -> None:

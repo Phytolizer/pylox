@@ -13,5 +13,5 @@ class Token:
     def __str__(self):
         out = f"{self.type} {self.lexeme}"
         if self.literal is not None:
-            out += f" {self.literal}"
+            out += f" {str(self.literal).replace('.0', '')}"
         return out

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 from math import isclose
 from pytest import mark
 
@@ -9,7 +9,7 @@ from lox.token import Token
 from lox.token_type import TokenType
 
 
-def scan(text: str) -> List[Token]:
+def scan(text: str) -> Tuple[Token, ...]:
     scanner = Scanner(text)
     lox.s_had_error = False
     tokens = scanner.scan_tokens()

@@ -20,7 +20,7 @@ class AstPrinter(Expression.Visitor):
     def visit_LiteralExpression(self, expr):
         if expr.value is None:
             return "nil"
-        return str(expr.value)
+        return str(expr.value).replace(".0", "")
 
     def visit_UnaryExpression(self, expr):
         return self._parenthesize(expr.operator.lexeme, expr.right)

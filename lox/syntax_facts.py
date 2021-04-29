@@ -1,7 +1,9 @@
+from typing import Optional
+
 from lox.token_type import TokenType
 
 
-def text_for_type(type: TokenType) -> str:
+def text_for_type(type: TokenType) -> Optional[str]:
     return {
         TokenType.LEFT_PAREN: "(",
         TokenType.RIGHT_PAREN: ")",
@@ -66,15 +68,21 @@ def is_keyword(type: TokenType) -> bool:
 
 
 def requires_separator(left: TokenType, right: TokenType) -> bool:
-    return (is_keyword(left) and is_keyword(right) or
-            left == TokenType.IDENTIFIER and is_keyword(right) or
-            is_keyword(left) and right == TokenType.IDENTIFIER or
-            left == TokenType.BANG and
-            right in (TokenType.EQUAL, TokenType.EQUAL_EQUAL) or
-            left == TokenType.EQUAL and
-            right in (TokenType.EQUAL, TokenType.EQUAL_EQUAL) or
-            left == TokenType.LESS and
-            right in (TokenType.EQUAL, TokenType.EQUAL_EQUAL) or
-            left == TokenType.GREATER and
-            right in (TokenType.EQUAL, TokenType.EQUAL_EQUAL) or
-            left == TokenType.SLASH and right == TokenType.SLASH)
+    return (
+        is_keyword(left)
+        and is_keyword(right)
+        or left == TokenType.IDENTIFIER
+        and is_keyword(right)
+        or is_keyword(left)
+        and right == TokenType.IDENTIFIER
+        or left == TokenType.BANG
+        and right in (TokenType.EQUAL, TokenType.EQUAL_EQUAL)
+        or left == TokenType.EQUAL
+        and right in (TokenType.EQUAL, TokenType.EQUAL_EQUAL)
+        or left == TokenType.LESS
+        and right in (TokenType.EQUAL, TokenType.EQUAL_EQUAL)
+        or left == TokenType.GREATER
+        and right in (TokenType.EQUAL, TokenType.EQUAL_EQUAL)
+        or left == TokenType.SLASH
+        and right == TokenType.SLASH
+    )

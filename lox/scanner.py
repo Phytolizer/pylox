@@ -25,7 +25,7 @@ KEYWORDS = {
 
 
 def is_digit(c: str) -> bool:
-    return '0' <= c and c <= '9'
+    return "0" <= c and c <= "9"
 
 
 def is_alpha(c: str) -> bool:
@@ -169,7 +169,7 @@ class Scanner:
         self._current = 0
         self._line = 1
 
-    def scan_tokens(self) -> Tuple[Token]:
+    def scan_tokens(self) -> Tuple[Token, ...]:
         while not self._at_end():
             self._start = self._current
             self._scan_token()
